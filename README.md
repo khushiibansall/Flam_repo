@@ -1,80 +1,78 @@
-# Flam_repo
- 
-# 🔍 Seamlessly Integrating a Person into a Scene
+# Seamlessly Integrating a Person into a Scene
 
-## 🎯 Objective
+## Objective
 
-The goal of this project was to insert a person into a background image in a way that looks photorealistic – meaning the lighting, shadows, colour, and overall blending should appear as natural as possible.
+The aim of this project was to insert a person into a background image in a way that looks as natural and realistic as possible. This involved matching lighting, color tone, shadows, and edges so that the final image blends seamlessly.
 
-While some steps were provided as part of the assignment, several had to be expanded or adapted to create a convincing final result.
+Although some steps were given, several had to be extended or rethought to achieve a convincing final result.
 
 ---
 
-## 🧩 Overview of Steps Taken
+## Summary of Approach
 
-### 📸 Task 1: Capturing and Preparing the Person's Image
+### Task 1: Capturing and Preparing the Person's Image
 
-**Step 1: Image Capture**  
-Used OpenCV to access the system’s webcam and capture a high-resolution image of a person in a well-lit, frontal pose.
+**Image Capture**  
+Using OpenCV, I captured a high-resolution image from the webcam. The subject was positioned in even lighting with a neutral background.
 
-**Step 2: Background Removal**  
-Used the `rembg` Python library (which uses U²-Net) to remove the background and save the person as a transparent PNG.
-
----
-
-### 🌑 Task 2: Analyzing Shadows and Lighting of the Background
-
-**Step 1: Shadow Detection**  
-HSV thresholding + gradient analysis in OpenCV to create a binary shadow mask.
-
-**Step 2: Shadow Classification**  
-Classified shadows as soft or hard using edge sharpness via the Laplacian operator.
+**Background Removal**  
+I used the `rembg` library (which uses the U²-Net model) to remove the background. The result was saved as a transparent PNG for compositing.
 
 ---
 
-### 💡 Task 3: Determining Light Direction
+### Task 2: Analyzing Shadows and Lighting
 
-**Outdoor Scenes:**  
-Annotated base and shadow tip to calculate a light direction vector and angle using trigonometry.
+**Shadow Detection**  
+Shadows in the background were detected using HSV thresholding and gradient filters. A binary mask was created to highlight shadow regions.
 
-**Indoor Scenes:**  
-Used Sobel gradient filters to estimate the dominant lighting direction based on brightness falloff.
-
----
-
-### 🎨 Task 4: Coloring and Blending
-
-**Step 1: Advanced Color Transfer**  
-Used LAB color statistics with partial luminance preservation to match person color tone to the background.
-
-**Step 2: Local Color Adaptation**  
-Sampled edge-adjacent background regions to blend those tones into the subject based on proximity (via distance transform).
-
-**Step 3: Histogram Matching**  
-Performed histogram matching on LAB a/b channels for hue/saturation alignment.
-
-**Step 4: Lighting Correction**  
-Used background gradients to adjust the person’s brightness in HSV space to match ambient light.
-
-**Step 5: Seamless Blending**  
-Applied multi-band Laplacian pyramid blending to eliminate harsh edges between person and background.
-
-**Step 6: Alpha Blending**  
-Applied a feathered Gaussian blur on the alpha mask for soft transitions.
+**Shadow Classification**  
+By applying the Laplacian operator, I measured edge sharpness in the shadow mask to distinguish between soft and hard shadows.
 
 ---
 
-### 🖼️ Task 5: Generating the Final Output
+### Task 3: Light Direction Estimation
 
-Simulated a soft shadow from the alpha mask using blur and directional offset, then placed the person into a full-scene background.
+**Outdoor Scenes**  
+Light direction was estimated by annotating the base of the subject and the tip of the shadow, then calculating the direction vector and angle.
 
-### ✅ Final Result:
-
-![Final Composite](final_composite.png)
+**Indoor Scenes**  
+For indoor lighting, I analyzed brightness gradients using Sobel filters to estimate where the light was coming from.
 
 ---
 
-## 🛠️ Tools and Libraries Used
+### Task 4: Color Matching and Blending
+
+**Color Transfer**  
+The person’s colors were adjusted using LAB color space statistics to match the background. Some luminance was preserved for natural appearance.
+
+**Local Color Adaptation**  
+I sampled colors from around the person’s placement area and softly blended those into the subject to enhance local realism.
+
+**Histogram Matching**  
+Color histograms (a and b channels) were matched between the person and background to align hue and saturation.
+
+**Lighting Correction**  
+Using gradient analysis, I modified the brightness of the subject to better reflect the lighting in the background.
+
+**Seamless Blending**  
+Laplacian pyramids were used for multi-band blending, allowing smooth transitions across edges.
+
+**Alpha Blending**  
+A feathered Gaussian-blurred mask was used to softly merge the person into the background.
+
+---
+
+### Task 5: Final Output
+
+A soft, directional shadow was simulated using the alpha mask, offset and blurred to match the estimated light source. The person was placed into a full background scene with the final composite exported as a single image.
+
+**Final Output:**
+
+<img src="final_composite.png" width="400">
+
+---
+
+## Tools and Libraries Used
 
 - Python 3.10  
 - OpenCV  
@@ -82,22 +80,20 @@ Simulated a soft shadow from the alpha mask using blur and directional offset, t
 - Rembg (U²-Net)  
 - Scikit-Image  
 - Matplotlib  
-- Streamlit (optional deployment)
+- Streamlit (for optional deployment)
 
 ---
 
-## 🔍 Missing / Additional Steps Identified
+## Additional Steps Identified
 
-- Colour harmonization beyond LAB mean/std matching  
-- Edge-aware local color blending  
-- Lighting adjustment based on brightness gradients  
-- Shadow simulation using alpha mask and vector offset
-
----
-
-## 💭 Reflection
-
-This project involved more than just code — it was a creative problem-solving process where visual realism mattered. Matching color and light realistically was a major challenge. Iterative testing and layering techniques led to a final composite that closely resembles an authentic photograph.
+- Color harmonization beyond mean and standard deviation  
+- Proximity-weighted local blending  
+- Lighting correction based on image gradients  
+- Shadow simulation using alpha masks
 
 ---
+
+## Reflection
+
+This project went beyond simple image compositing. Making the result look believable required both technical knowledge and aesthetic judgment. The most challenging parts were getting color tones to align and simulating realistic lighting. Through experimentation and refinement, the final result came together in a way that felt visually convincing.
 
